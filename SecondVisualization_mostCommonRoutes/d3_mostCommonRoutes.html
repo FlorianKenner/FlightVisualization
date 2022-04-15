@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <script src="https://d3js.org/d3-fetch.v1.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="map"></div>
+    <script type="text/javascript">
+
+        var view = "map"
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZmxvcmFpbmsiLCJhIjoiY2wxbjh1cGZyMDl6YjNlcGd4MXZ2bDNoeSJ9.FzxEZ_wKMQ-sZn9L9vBKWQ';
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/dark-v9',
+            zoom: 3,
+            center: [-104.386330, 43.753746]
+        });
+
+        var canvas = map.getCanvasContainer();
+        var svg = d3.select(canvas).append("svg");
+
+        let flightRoutes = 'DataFrameForMostCommonRoutes.csv'
+
+        var projection = d3.geo.albersUsa();
+
+        // loading the dataFrame
+
+        d3.csv(flightRoutes, (route) => {
+            route.color = d3.rgb(Math.random(0, 255), Math.random(0, 255), Math.random(0, 255))
+            return
+        }
+        ).then(data => {
+            console.log(data)
+            g = svg.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("g")
+
+            g.append("circle")
+                .attr("r", x => { return x.COUNT / 4000 })
+                .attr("cx", x => { return projection(x.ORIGIN_LATITUDE, x.ORIGIN_LONGITUDE) })
+                .attr("cy", x => { return projection(x.ORIGIN_LATITUDE, x.ORIGIN_LONGITUDE) })
+                .attr("fill", x => { return x.color })
+        })
+
+    </script>
+</body>
+
+
+
+
+</html>
