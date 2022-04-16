@@ -2,60 +2,68 @@
 <html>
 
 <head>
-    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css" rel="stylesheet" />
-    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/queue.v1.min.js"></script>
     <script src="https://d3js.org/d3-fetch.v1.min.js"></script>
-
-    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div id="map"></div>
     <script type="text/javascript">
 
-        var view = "map"
-        mapboxgl.accessToken = 'pk.eyJ1IjoiZmxvcmFpbmsiLCJhIjoiY2wxbjh1cGZyMDl6YjNlcGd4MXZ2bDNoeSJ9.FzxEZ_wKMQ-sZn9L9vBKWQ';
+        // var view = "map"
 
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/dark-v9',
-            zoom: 3,
-            center: [-104.386330, 43.753746]
-        });
+        // //Mapbox initialization
+        // mapboxgl.accessToken = 'pk.eyJ1IjoiZmxvcmFpbmsiLCJhIjoiY2wxbjh1cGZyMDl6YjNlcGd4MXZ2bDNoeSJ9.FzxEZ_wKMQ-sZn9L9vBKWQ'; //public key
 
-        var canvas = map.getCanvasContainer();
-        var svg = d3.select(canvas).append("svg");
+        // var map = new mapboxgl.Map({
+        //     container: 'map',
+        //     style: 'mapbox://styles/mapbox/dark-v9',
+        //     zoom: 3,
+        //     center: [-104.386330, 43.753746]
+        // });
 
-        let flightRoutes = 'DataFrameForMostCommonRoutes.csv'
+        // var canvas = map.getCanvasContainer();
+        // var svg = d3.select(canvas).append("svg");
 
-        var projection = d3.geo.albersUsa();
+        // let all_flights = 'https://gist.githubusercontent.com/florianeichin/cfa1705e12ebd75ff4c321427126ccee/raw/db8c1fd01214af38ceba7a5f8e43b6d7cd5f1c93/flights_all_cleaned.csv'
+        // let flights_subset = 'https://gist.githubusercontent.com/florianeichin/b877d354d6bc52e6ce840572e40b0497/raw/45d418cd65ba46bd76e5f0370ad6191cdc7f7644/flights_subset_cleaned.csv'
+        let mostCommonRoutesJSON = "https://gist.githubusercontent.com/FlorianKenner/97b02ba28b934ab8f67da4e90af71345/raw/787d5fbb1c75890344b71f06bc5026dfe3caf188/SecondVisualization_mostCommonRoutes%255CDataFrameForMostCommonRoutes.json"
+        let svg = d3.select("body")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "520")
 
-        // loading the dataFrame
+        d3.json(mostCommonRoutesJSON)
+            .then((data) => {
+                console.log(data)
+                    .data(data)
+                    .enter()
+                    .append("circle")
+                    .attr("fill", "black")
+                    .attr("r", (o, i) => { return o.COUNT / 100 })
+                    .attr("cx", (o, i) => { return o.ORIGIN_LATITUDE })
+                    .attr("cy", (o, i) => { return o.ORIGIN_LATITUDE })
+            })
 
-        d3.csv(flightRoutes, (route) => {
-            route.color = d3.rgb(Math.random(0, 255), Math.random(0, 255), Math.random(0, 255))
-            return
-        }
-        ).then(data => {
-            console.log(data)
-            g = svg.selectAll("circle")
-                .data(data)
-                .enter()
-                .append("g")
 
-            g.append("circle")
-                .attr("r", x => { return x.COUNT / 4000 })
-                .attr("cx", x => { return projection(x.ORIGIN_LATITUDE, x.ORIGIN_LONGITUDE) })
-                .attr("cy", x => { return projection(x.ORIGIN_LATITUDE, x.ORIGIN_LONGITUDE) })
-                .attr("fill", x => { return x.color })
-        })
+
+
+
+
+
+        // //Project geojson coordinate to the map's current state
+        // function project(d) {
+        //     return map.project(new mapboxgl.LngLat(+d[0], +d[1]));
+        // }
+
+        // //Project any point to map's current state
+        // function projectPoint(lon, lat) {
+        //     var point = map.project(new mapboxgl.LngLat(lon, lat));
+        //     return point
+
+        // }
 
     </script>
 </body>
-
-
-
 
 </html>
