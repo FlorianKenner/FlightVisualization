@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+USHolidayDates(2004-2021).csv
+USHolidayDates(2004-2021).csv
+data/airlines.csv
+data/CleanedFlights.csv
+data/flights.csv
+SecondVisualization_mostCommonRoutes/DataFrameForMostCommonRoutes.csv
+data/airports.csv
+USHolidayDates(2004-2021).csv
+USHolidayDates(2004-2021).csv
